@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom event emitter</title>
+
+</head>
+<body>
+    <div class="todo-box"></div>
+    <div class="input-area">
+        <span>
+        <input class="input-box" style="padding: 10px; border: 2px solid black" placeholder="Add your todo"/>
+        <button onclick="handleAddTodo()" style="padding: 10px; border: none; background-color: hotpink;"> Add todo</button>
+        </span>
+    </div>
+
+
+    <script>
+        const listeners = {
+            messageSent: [],
+            todoAdded: [],
+            colorChange: []
+        }
+
+        class EventEmitter{
+            on( eventName, func ){
+                    listeners[eventName].push(func)
+                }
+                 
+            emit(eventName, data){
+                let funcs = listeners[eventName]
+                funcs.forEach( (func) => {
+                    func(data)
+                });
+            }
+            once(eventName, func ){
+                function wrapper(data){
+                    func(data)
+                    let index = listeners[eventName].indexOf(wrapper);
+                    listeners[eventName].splice(index, 1)
+
+                }
+                 listeners[eventName].push(wrapper)
+                }
+            }
+
+        const emitter = new EventEmitter();
+        emitter.on("messageSent", (msg)=> {
+            console.log( "Listener 1 got the message:", msg)
+        })
+        emitter.on("messageSent", (msg)=> {
+            console.log( "Listener 2 got the message:", msg)
+        })
+        emitter.on("todoAdded", (inputValue)=>{
+                let todoItem = document.createElement('h2');
+                todoItem.innerText = inputValue
+                let todoBox = document.body.querySelector('.todo-box');
+                todoBox.appendChild(todoItem)
+        })
+        emitter.once("todoAdded", (msg) => {
+            console.log("This will run only once:", msg);});
+        emitter.emit("todoAdded", "task 1");
+        emitter.emit("todoAdded", "task 2");
+
+        emitter.emit("messageSent" , "hi uwu");
+
+        function handleAddTodo(){
+            let inputValue = document.body.querySelector('.input-box').value;
+            emitter.emit('todoAdded', inputValue);
+
+        }
+
+
+    </script>
+</body>
+</html>
+ <!-- Step 1: Create the Emitter Skeleton
+
+ Make an empty object or class called EventEmitter. -->
+
+<!-- Inside, create the structure to store listeners (initially empty).
+
+ Challenge:
+ Don’t type methods yet — just decide the data structure in your mind or on paper.
+
+Think: how do you associate multiple listeners with different event names?
+
+ Step 2: Add the on Method
+ Purpose: register a listener for a given event.
+
+ Mini Challenge:
+
+Check if the event already exists in your listener storage.
+
+If yes, add the callback to its array; if no, create a new array with the callback.
+
+💡 Think: How will you store multiple listeners for the same event?
+
+Step 3: Add the emit Method
+
+Purpose: trigger all listeners for a given event.
+
+Mini Challenge:
+
+Take an eventName and optional data.
+
+Check if there are listeners for that event.
+
+Call each listener with the data.
+
+💡 Think: How will you loop through all callbacks safely?
+💡 Extra: What happens if emit is called for an event with no listeners?
+Step 4: Test It With a Mini App
+Pick one scenario:
+To-do notifier → add tasks → emit todoAdded
+Mini Challenge:
+Add two listeners for the same event and make sure both run when you emit.
+Print something to console to verify it works.
+Step 5: Optional Challenge (Extra Brain Training)
+Add a once method → a listener that fires only once then removes itself.
+Add an off method → remove a specific listener from an event.
+Test multiple events simultaneously.
+💡 Think: How can you remove a callback from an array? How do you make sure once triggers only one time? -->
