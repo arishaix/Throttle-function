@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div><span>
+        <h4>Key</h4>
+        <input class="key-input" placeholder="Enter key" style="padding: 10px;"/>
+        <h4>Value</h4>
+        <input class="value-input" placeholder=" Enter value" style="padding: 10px;"/>
+        </span>
+        <button onclick="saveData()" style="padding: 10px;"> Save </button>
+        
+        <div class="display-area">
+        <span>
+             <h4>DATA</h4>
+            <input class="key-get-input" placeholder="Enter key" style="padding: 10px;"/>
+            <button onclick="getData()" style="padding: 10px;"> Get Data </button>
+        </span>
+        </div>
+
+        <span>
+             <h4>Delete an item</h4>
+            <input class="del-input" placeholder="Enter key" style="padding: 10px;"/>
+            <button onclick="deleteItem()" style="padding: 10px;"> Delete Item </button>
+        </span>
+
+        <span>
+             <h4>Clear all of your data </h4>
+            <button onclick="clearData()" style="padding: 10px;"> Clear Data </button>
+        </span>
+        </div>
+
+        
+        
+
+    </div>
+    <script>
+        class StorageManager{
+            set(key,value){
+                try{
+                    let item =JSON.stringify(value);
+                    localStorage.setItem(key, item);
+                }catch(error){
+                    console.error(`Error setting the value ${error}`)
+                }
+                
+            }
+            get(key){
+                try{
+                    if(key){
+                    let item = localStorage.getItem(key);
+                    return JSON.parse(item);
+                    }
+                }catch(error){
+                    console.error(`Error getting the value ${error}`)
+                }
+            }
+            remove(key){
+                localStorage.removeItem(key)
+
+            }
+            clear(){
+                localStorage.clear()
+
+            }
+        }
+        const cache = new StorageManager();
+        
+        function saveData(){
+            let key = document.body.querySelector('.key-input').value;
+            let value = document.body.querySelector('.value-input').value;
+            cache.set(key,value )
+            document.body.querySelector('.key-input').value = ''
+            document.body.querySelector('.value-input').value = ''
+        
+
+        }
+
+        let displayItem = document.createElement('h2');
+        let displayArea = document.body.querySelector('.display-area');
+        displayArea.appendChild(displayItem)
+
+        function getData(){
+            let getKey = document.body.querySelector('.key-get-input').value;
+            let item = cache.get(getKey);
+            displayItem.innerText = item;
+            document.body.querySelector('.key-get-input').value = ''
+        }
+       
+        function deleteItem(){
+            let key = document.body.querySelector('.del-input').value;
+            cache.remove(key);
+            document.body.querySelector('.del-input').value = ''
+            alert('Item deleted')
+        }
+
+        function clearData(){
+            cache.clear();
+            alert('Data Cleared')
+        }
+
+
+    </script>
+</body>
+</html>
