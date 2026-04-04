@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+    <script>
+
+        function task(){
+           const promise = new Promise((resolve, reject)=> {
+             if (Math.random()>0.7){
+                resolve();
+             }else{
+                reject()
+             }
+           })
+           return promise
+        }
+        async function retry(asyncFunc, retries){
+            for(let i = 0 ; i < retries ; i++){
+            try{
+                const data = await asyncFunc()
+                return data
+            }catch(error){
+                console.log(error)
+            }
+            }
+            throw new Error('Function failed')
+        }
+        retry(task,3)
+        .then((result)=>console.log('The result is', result))
+        .catch((error)=> console.log('Error', error))
+
+    </script>
+</body>
+</html>
