@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+    <script>
+
+    class Store{
+        constructor(state, reducer){
+            this.state = state
+            this.listeners = []
+            this.reducer = reducer
+        }
+
+        getState(){
+            return this.state;
+           
+        }
+        dispatch(action){
+            const newstate = this.reducer(this.state, action)
+            this.state = newstate
+            this.listeners.forEach(listener => {
+                listener()
+                
+            });
+
+
+        }
+        subscribe(listener){
+            this.listeners.push(listener)
+        }
+
+        
+        }
+        function myReducer(state,action){
+            if (action.type === 'INCREMENT'){
+                return state +1;
+            }
+            if (action.type === 'DECREMENT'){
+                return state -1
+            }
+            return state
+    }
+
+    const myStore = new Store(0, myReducer);
+
+    myStore.subscribe(()=> {
+        console.log('hey, the state changed to:' , myStore.getState())
+
+    })
+    console.log("Initial state is:", myStore.getState());
+        
+        myStore.dispatch({ type: 'INCREMENT' }); // Should print 1
+        myStore.dispatch({ type: 'INCREMENT' }); // Should print 2
+        myStore.dispatch({ type: 'DECREMENT' }); // Should print 1
+
+    </script>
+</body>
+</html>
