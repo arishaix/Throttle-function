@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        li{
+            border: 2px solid whie;
+            background-color: pink; 
+            padding: 12px;
+            width : 60px;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="list-container">
+     
+            <ul class="list-container">
+               <li id="1" draggable="true">Coffee</li>
+               <li id="2" draggable="true">Tea</li>
+               <li id="3" draggable="true">Milk</li>
+               <li id="4" draggable="true">Matcha</li>
+               <li id="5" draggable="true">Juice</li>
+               <li id="6" draggable="true">Slush</li>
+            </ul>
+    </div>
+     <script>
+        let itemBeingDragged = ""
+        let itemBeingDraggedOver = ""
+         function detectDrag(event){
+            console.log("item  is being dragged!")
+            itemBeingDragged = event.target.id 
+         }
+         function detectDragOver(event){
+            console.log("item is being dragged over another item")
+            itemBeingDraggedOver = event.target.id
+            event.preventDefault()
+
+         }
+         function drop(event){
+            event.preventDefault()
+            let DI = document.getElementById(itemBeingDragged)
+            let DOI = document.getElementById(itemBeingDraggedOver)
+            let listCon = document.querySelector("ul")
+            listCon.insertBefore(DI , DOI)
+            
+            
+         }
+        let listItems = document.querySelectorAll("li")
+        listItems.forEach(item => {
+            item.addEventListener("dragstart" , detectDrag)
+            item.addEventListener("dragover" , detectDragOver)
+            
+        });
+        document.querySelector("ul").addEventListener("drop" , drop)
+     </script>
+
+
+
+
+
+
+
+    
+</body>
+</html>
