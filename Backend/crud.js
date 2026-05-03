@@ -1,4 +1,5 @@
 const express = require('express')
+const validateUserMiddleware = require('./validatemiddleware');
 const app = express()
 
 app.use(express.json());
@@ -36,7 +37,7 @@ app.get('/users/:id' , (req, res)=> {
     }
 })
 
-app.post('/user' , (req, res)=>{
+app.post('/user' ,validateUserMiddleware, (req, res)=>{
     const {name} = req.body
     newId = Users[Users.length -1].id +1
     const newUser = {id: newId , name: name}
@@ -45,7 +46,7 @@ app.post('/user' , (req, res)=>{
 
 })
 
-app.put('/user/:id' , (req, res) => {
+app.put('/user/:id' ,validateUserMiddleware , (req, res) => {
     const userId = req.params.id
     const {name} = req.body
     const person = Users.find(user => user.id == userId)
